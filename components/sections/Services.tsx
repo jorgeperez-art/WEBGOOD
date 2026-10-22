@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { site } from "@/content/site";
 import { images } from "@/content/images";
-import { Tbc } from "@/components/ui/Tbc";
+import { Button } from "@/components/ui/Button";
 
 export function Services() {
   return (
@@ -21,23 +21,28 @@ export function Services() {
           <h2 id="servicios-titulo" className="text-3xl font-extralight tracking-tight md:text-4xl">
             Servicios
           </h2>
-          <ol className="mt-10 border-t border-linea">
-            {site.services.map((service, i) => (
-              <li key={i} className="grid grid-cols-[3rem_1fr] gap-2 border-b border-linea py-7">
-                <span className="text-sm font-medium tabular-nums text-cobre">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="text-lg font-normal">
-                    <Tbc value={service.title} />
-                  </h3>
-                  <p className="mt-2 text-sm text-acero">
-                    <Tbc value={service.description} />
-                  </p>
-                </div>
+          <ol className="mt-10 space-y-12">
+            {site.services.map((group, i) => (
+              <li key={group.title}>
+                <h3 className="flex items-baseline gap-4 border-b border-linea pb-4 text-xl font-light">
+                  <span className="text-sm font-medium tabular-nums text-cobre">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {group.title}
+                </h3>
+                <ul className="grid sm:grid-cols-2 sm:gap-x-8">
+                  {group.items.map((item) => (
+                    <li key={item} className="border-b border-linea py-3.5 text-[0.95rem]">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ol>
+          <Button href="/#reservar" className="mt-12">
+            Reservar cita
+          </Button>
         </div>
       </div>
     </section>
