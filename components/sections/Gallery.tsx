@@ -17,7 +17,7 @@ export function Gallery() {
         </div>
 
         <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-          <figure className="relative col-span-2 aspect-[4/3] overflow-hidden md:row-span-2 md:aspect-auto">
+          <figure className="relative col-span-2 aspect-[4/3] overflow-hidden rounded-foto md:row-span-2 md:aspect-auto">
             <Image
               src={main.src}
               alt={main.alt}
@@ -27,7 +27,7 @@ export function Gallery() {
             />
           </figure>
           {rest.map((img, i) => (
-            <figure key={img.alt} className={`relative aspect-[4/3] overflow-hidden ${i === rest.length - 1 ? "col-span-2 md:col-span-1" : ""}`}>
+            <figure key={img.alt} className={`relative aspect-[4/3] overflow-hidden rounded-foto-sm md:rounded-foto ${i === rest.length - 1 ? "col-span-2 md:col-span-1" : ""}`}>
               <Image
                 src={img.src}
                 alt={img.alt}

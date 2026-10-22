@@ -7,7 +7,7 @@ export function Services() {
   return (
     <section id="servicios" aria-labelledby="servicios-titulo" className="border-t border-linea bg-papel">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:grid-cols-2 md:gap-20 md:px-8 md:py-28">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-t-full md:sticky md:top-[calc(var(--header-h)+2rem)] md:self-start">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-arco md:sticky md:top-[calc(var(--header-h)+2rem)] md:self-start">
           <Image
             src={images.services.src}
             alt={images.services.alt}

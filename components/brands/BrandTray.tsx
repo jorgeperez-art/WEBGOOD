@@ -69,7 +69,7 @@ export function BrandTray({ brands }: { brands: readonly string[] }) {
         {brands.map((brand, i) => (
           <li
             key={brand}
-            className="group flex w-56 shrink-0 snap-start select-none flex-col justify-between gap-10 border border-linea bg-papel p-6 transition-colors duration-300 hover:border-arena md:w-64"
+            className="group flex w-56 shrink-0 snap-start select-none flex-col justify-between gap-10 rounded-foto-sm border border-linea bg-papel p-6 transition-colors duration-300 hover:border-arena md:w-64"
           >
             <FrameIcon
               shape={frameShapes[i % frameShapes.length]}

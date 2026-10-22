@@ -30,21 +30,26 @@ export const site = {
   locale: "es_ES",
   contact: {
     address: {
-      street: tbc("Dirección"),
-      postalCode: tbc("Código postal"),
-      city: tbc("Municipio"),
+      street: "Calle Blanco, 1",
+      postalCode: "38400",
+      city: "Puerto de la Cruz",
       region: "Santa Cruz de Tenerife",
       country: "ES",
     },
     geo: null as null | { lat: number; lng: number },
     phone: tbc("Teléfono"),
     whatsapp: tbc("WhatsApp"),
-    email: tbc("Email"),
-    mapsUrl: null as string | null,
+    email: "hola@goodview.es",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Calle+Blanco+1,+38400+Puerto+de+la+Cruz" as string | null,
     social: [] as { network: string; url: string }[],
   },
-  /** Texto visible del horario. Las franjas de reserva salen de la tabla opening_hours. */
-  hoursLabel: tbc("Horario"),
+  /** Horario de apertura (hora de Canarias). También sirve para el JSON-LD y para sembrar opening_hours. */
+  openingHours: [
+    { days: ["Mo", "Tu", "We", "Th", "Fr"], opens: "09:30", closes: "20:30" },
+    { days: ["Sa"], opens: "10:00", closes: "14:00" },
+  ],
+  /** Texto visible del horario. */
+  hoursLabel: "Lunes a viernes, 9:30 a 20:30 · Sábados, 10:00 a 14:00",
   bookingLabel: tbc("Condiciones de cita"),
   services: [
     { title: tbc("Servicio"), description: tbc("Descripción") },

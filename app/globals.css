@@ -14,6 +14,10 @@
   --font-sans: var(--font-fustat), ui-sans-serif, system-ui, sans-serif;
 
   --ease-suave: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Esquinas redondeadas de las fotos, como las curvas de la tienda. */
+  --radius-foto: 2rem;
+  --radius-foto-sm: 1.25rem;
 }
 
 :root {
@@ -87,4 +91,9 @@ section[id] {
 
 @utility animate-enfoque {
   animation: enfoque 1.8s var(--ease-suave) 0.3s both;
+}
+
+/* Arco de los expositores de la tienda: semicírculo arriba y esquinas suaves abajo (para cajas 4:5). */
+@utility rounded-arco {
+  border-radius: 50% 50% var(--radius-foto) var(--radius-foto) / 40% 40% var(--radius-foto) var(--radius-foto);
 }

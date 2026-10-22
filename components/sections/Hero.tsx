@@ -30,7 +30,7 @@ export function Hero() {
 
         <div className="relative order-1 md:order-2">
           {/* Arco: la forma de los expositores de la tienda. */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-t-full bg-arena/40">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-arco bg-arena/40">
             <Image
               src={images.hero.src}
               alt={images.hero.alt}
@@ -47,7 +47,7 @@ export function Hero() {
       <dl className="border-y border-linea bg-papel">
         <div className="mx-auto grid max-w-7xl gap-4 px-5 py-6 text-sm sm:grid-cols-3 md:px-8">
           {[
-            ["Ubicación", site.contact.address.street],
+            ["Ubicación", `${site.contact.address.street} · ${site.contact.address.city}`],
             ["Horario", site.hoursLabel],
             ["Citas", site.bookingLabel],
           ].map(([label, value]) => (

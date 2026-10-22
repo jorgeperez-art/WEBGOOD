@@ -17,10 +17,10 @@ export const images = {
   lens: { src: lente, alt: "" },
   services: { src: butacas, alt: "Zona de espera con butacas junto al escaparate" },
   booking: { src: mostrador, alt: "Mostrador curvo de madera clara y mesa de atención" },
-  visit: { src: arco, alt: "Expositores iluminados y espejo en arco" },
+  visit: { src: expositor, alt: "Pared de baldas con monturas y suelo de madera clara" },
   gallery: [
     { src: celosia, alt: "Celosía de madera de roble y pasillo con expositores de monturas" },
-    { src: expositor, alt: "Pared de baldas con monturas y suelo de madera clara" },
+    { src: arco, alt: "Expositores iluminados y espejo en arco" },
     { src: mesas, alt: "Mesas de atención con plantas colgantes" },
     { src: pasillo, alt: "Pasillo con expositores de monturas a ambos lados y escaparate" },
     { src: baldas, alt: "Pared de expositores con baldas de madera y celosía" },

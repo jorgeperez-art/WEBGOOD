@@ -16,14 +16,16 @@ export function Visit() {
 
   return (
     <section id="visitanos" aria-labelledby="visitanos-titulo" className="border-t border-linea bg-papel">
-      <div className="relative h-[18rem] overflow-hidden md:h-[30rem]">
-        <Image
-          src={images.visit.src}
-          alt={images.visit.alt}
-          placeholder="blur"
-          sizes="100vw"
-          className="h-full w-full object-cover"
-        />
+      <div className="mx-auto max-w-7xl px-5 pt-5 md:px-8 md:pt-8">
+        <div className="relative h-[18rem] overflow-hidden rounded-foto md:h-[30rem]">
+          <Image
+            src={images.visit.src}
+            alt={images.visit.alt}
+            placeholder="blur"
+            sizes="(min-width: 1280px) 1216px, 100vw"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </div>
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:grid-cols-[1fr_1.4fr] md:px-8 md:py-24">
         <div>
@@ -31,7 +33,9 @@ export function Visit() {
           <h2 id="visitanos-titulo" className="text-3xl font-extralight tracking-tight md:text-4xl">
             Visítanos
           </h2>
-          <p className="mt-6 max-w-sm text-acero">Tenerife, {address.region}.</p>
+          <p className="mt-6 max-w-sm text-acero">
+            {address.city}, Tenerife.
+          </p>
           {mapsUrl ? (
             <Button href={mapsUrl} variant="line" className="mt-8" target="_blank" rel="noopener">
               Cómo llegar
