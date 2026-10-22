@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Paleta del manual corporativo y del brief. El cobre solo para acentos. */
+@theme {
+  --color-cobre: #843d25;
+  --color-tinta: #231a16;
+  --color-niebla: #efece8;
+  --color-papel: #ffffff;
+  --color-salvia: #6b7050;
+  --color-arena: #d2b49a;
+  --color-acero: #6f625b;
+  --color-linea: #ddd5cd;
+
+  --font-sans: var(--font-fustat), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-suave: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+:root {
+  --header-h: 4.5rem;
+  --mobile-nav-h: 4rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-niebla);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Los anclajes no quedan tapados por la cabecera fija. */
+section[id] {
+  scroll-margin-top: var(--header-h);
+}
+
+/* En móvil la barra inferior no tapa el contenido. */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom));
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cobre);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-arena);
+  color: var(--color-tinta);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
