@@ -66,6 +66,25 @@ section[id] {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* El punto focal se enfoca una sola vez al cargar. */
+@keyframes enfoque {
+  from {
+    filter: blur(10px);
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-enfoque {
+  animation: enfoque 1.8s var(--ease-suave) 0.3s both;
 }

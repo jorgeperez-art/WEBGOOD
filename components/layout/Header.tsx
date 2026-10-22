@@ -17,7 +17,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 h-[var(--header-h)] border-b border-linea bg-niebla/90 backdrop-blur-md">
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-center px-5 md:justify-between md:px-8">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-center px-5 md:justify-between md:px-8">
         <Link href="/" aria-label="goodview, Centro óptico: inicio" className="text-cobre">
           <Logo title="" className="h-8 w-auto md:h-9" />
         </Link>
