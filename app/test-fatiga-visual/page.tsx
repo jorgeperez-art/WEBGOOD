@@ -22,8 +22,8 @@ export default function Page() {
         </p>
         <div className="relative mt-10 hidden aspect-[5/4] overflow-hidden rounded-foto md:block">
           <Image
-            src={images.lens.src}
-            alt=""
+            src={images.lensLogo.src}
+            alt={images.lensLogo.alt}
             placeholder="blur"
             sizes="40vw"
             className="h-full w-full object-cover"
