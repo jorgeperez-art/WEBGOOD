@@ -46,8 +46,9 @@ function local(iso: string) {
 }
 
 function erpDb() {
-  const url = process.env.ERP_SUPABASE_URL;
-  const key = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY;
+  // Se recortan espacios y saltos de línea que a veces se cuelan al pegar en Vercel.
+  const url = process.env.ERP_SUPABASE_URL?.trim();
+  const key = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key) throw new Error("Faltan ERP_SUPABASE_URL o ERP_SUPABASE_SERVICE_ROLE_KEY");
   return createClient(url, key, { auth: { persistSession: false } });
 }
