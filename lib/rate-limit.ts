@@ -1,4 +1,5 @@
 import "server-only";
+import { supabaseEnv } from "@/lib/supabase/env";
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 
@@ -20,7 +21,7 @@ export async function isRateLimited(): Promise<boolean> {
   const ipHash = await clientIpHash();
   const since = Date.now() - WINDOW_MINUTES * 60_000;
 
-  if (!process.env.SUPABASE_URL) {
+  if (!supabaseEnv().url) {
     const recent = (memory.get(ipHash) ?? []).filter((t) => t > since);
     recent.push(Date.now());
     memory.set(ipHash, recent);

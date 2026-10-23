@@ -1,3 +1,4 @@
+import { supabaseEnv } from "@/lib/supabase/env";
 import type { AppointmentInput, Slot } from "./types";
 
 /**
@@ -18,8 +19,9 @@ export class SlotTakenError extends Error {
 
 export class BookingNotConfiguredError extends Error {}
 
+
 export async function getBookingProvider(): Promise<BookingProvider> {
-  const choice = process.env.BOOKING_PROVIDER ?? (process.env.SUPABASE_URL ? "supabase" : "demo");
+  const choice = process.env.BOOKING_PROVIDER ?? (supabaseEnv().url ? "supabase" : "demo");
   switch (choice) {
     case "supabase":
       return (await import("./supabase-provider")).supabaseProvider;
