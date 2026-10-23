@@ -2,22 +2,25 @@ import Image from "next/image";
 import { site } from "@/content/site";
 import { images } from "@/content/images";
 
-/** Foto de marca de la lente con el logotipo centrado, y el claim debajo para no tapar el logo. */
+/** Foto de marca de la lente entera, sin recortar, con el claim al lado. */
 export function LensBand() {
   return (
-    <section aria-label={site.brand.claim} className="mx-auto max-w-7xl px-5 pt-16 md:px-8 md:pt-24">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-foto md:aspect-[21/9]">
+    <section
+      aria-label={site.brand.claim}
+      className="mx-auto grid max-w-7xl gap-10 px-5 pt-16 md:grid-cols-2 md:items-center md:gap-20 md:px-8 md:pt-24"
+    >
+      <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-foto md:max-w-none">
         <Image
           src={images.lensLogo.src}
           alt={images.lensLogo.alt}
           placeholder="blur"
-          sizes="(min-width: 1280px) 1216px, 100vw"
-          className="h-full w-full object-cover object-center"
+          sizes="(min-width: 768px) 45vw, 100vw"
+          className="h-full w-full object-cover"
         />
       </div>
-      <div className="mt-10 grid gap-6 md:grid-cols-2 md:items-end">
+      <div>
         <p className="text-3xl font-extralight leading-snug text-balance md:text-5xl">{site.brand.claim}.</p>
-        <p className="max-w-sm text-acero md:justify-self-end">
+        <p className="mt-6 max-w-sm text-acero">
           En óptica, el punto focal es donde la luz converge y la imagen se vuelve nítida.
         </p>
       </div>
