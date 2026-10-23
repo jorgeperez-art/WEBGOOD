@@ -134,3 +134,27 @@ export const erpProvider: BookingProvider = {
     return { id: data.id };
   },
 };
+
+/**
+ * Diagnóstico: crea y borra al momento una cita de prueba (año 2000,
+ * cancelada) con los mismos campos que una reserva real, para ver por qué
+ * falla el guardado sin tener que reservar.
+ */
+export async function erpInsertCheck() {
+  const { data, error } = await erpDb()
+    .from("appointments")
+    .insert({
+      patient_id: null,
+      type: "otro",
+      status: "cancelada",
+      notes: "Prueba de diagnóstico de la web (se borra sola)",
+      date: "2000-01-01",
+      time_start: "09:00:00",
+      time_end: "09:30:00",
+    })
+    .select("id")
+    .single();
+  if (error) return { ok: false, codigo: error.code, mensaje: error.message, detalle: error.details, pista: error.hint };
+  const removed = await erpDb().from("appointments").delete().eq("id", data.id);
+  return { ok: true, borrada: !removed.error };
+}

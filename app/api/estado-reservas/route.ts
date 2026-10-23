@@ -8,7 +8,7 @@ import { supabaseAdmin } from "@/lib/supabase/server";
  * Diagnóstico de la reserva: dice qué falta sin mostrar ninguna clave.
  * Abrir /api/estado-reservas en el navegador.
  */
-export async function GET() {
+export async function GET(request: Request) {
   await connection();
   const env = {
     BOOKING_PROVIDER: process.env.BOOKING_PROVIDER ?? null,
@@ -60,7 +60,12 @@ export async function GET() {
         .limit(1);
       if (error) columnasAgenda = `error: ${error.message}`;
     }
-    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, prueba: { dia: date, horasLibres: slots.length } });
+    // ?guardar=1 prueba a guardar (y borrar) una cita en la agenda.
+    const guardar =
+      new URL(request.url).searchParams.has("guardar") && process.env.ERP_SUPABASE_URL
+        ? await (await import("@/lib/booking/erp-provider")).erpInsertCheck()
+        : undefined;
+    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, guardar, prueba: { dia: date, horasLibres: slots.length } });
   } catch (error) {
     const e = error as { name?: string; message?: string; code?: string; hint?: string };
     return NextResponse.json(
