@@ -117,10 +117,11 @@ export const site = {
     "Otro motivo",
   ],
   booking: {
-    /** Provisional, por confirmar: cuántos días se pueden reservar por adelantado y con cuánta antelación mínima. */
-    daysAhead: 30,
+    /** Confirmado por Jorge: se puede reservar hasta 15 días por adelantado. */
+    daysAhead: 15,
+    /** Provisional, por confirmar: antelación mínima para reservar. */
     minNoticeMinutes: 120,
-    /** Provisional, por confirmar: duración de cada cita si no hay tabla de horario (modo demo). */
+    /** Confirmado por Jorge: citas de 30 minutos (modo demo; en Supabase va en opening_hours). */
     slotMinutes: 30,
   },
   brands: [
