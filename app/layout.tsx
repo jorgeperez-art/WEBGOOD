@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { Footer } from "@/components/layout/Footer";
+import { OpticianJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
 
 const fustat = Fustat({
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${fustat.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
+        <OpticianJsonLd />
         <a
           href="#contenido"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-papel focus:px-4 focus:py-2"

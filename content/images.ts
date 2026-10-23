@@ -35,6 +35,12 @@ export const images = {
     "terapia-visual-infancia": { src: butacas, alt: "Rincón de espera con butacas" },
     taller: { src: celosia, alt: "Celosía de roble y expositores de monturas" },
   } as Record<string, { src: typeof mesas; alt: string }>,
+  /** Fotos de los consejos (clave: image de content/articles.ts). */
+  articles: {
+    fatiga: { src: lente, alt: "" },
+    miopia: { src: butacas, alt: "" },
+    progresivas: { src: mesas, alt: "" },
+  } as Record<string, { src: typeof mesas; alt: string }>,
   /** Mientras sean renders, se indica en la galería. */
   areRenders: true,
 };

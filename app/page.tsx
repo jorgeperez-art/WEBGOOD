@@ -5,6 +5,7 @@ import { Brands } from "@/components/sections/Brands";
 import { LensBand } from "@/components/sections/LensBand";
 import { Services } from "@/components/sections/Services";
 import { Booking } from "@/components/sections/Booking";
+import { Tips } from "@/components/sections/Tips";
 import { Visit } from "@/components/sections/Visit";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <Services />
       <LensBand />
       <Booking />
+      <Tips />
       <Visit />
     </>
   );

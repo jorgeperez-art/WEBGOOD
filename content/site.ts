@@ -183,6 +183,11 @@ export const site = {
     { id: "reservar", label: "Reservar cita" },
     { id: "visitanos", label: "Visítanos" },
   ] satisfies NavItem[],
+  /** Enlaces del pie a las páginas de contenido. */
+  footerLinks: [
+    { href: "/consejos", label: "Consejos" },
+    { href: "/test-fatiga-visual", label: "Test de fatiga visual" },
+  ],
   legalPages: [
     { href: "/aviso-legal", label: "Aviso legal" },
     { href: "/privacidad", label: "Privacidad" },

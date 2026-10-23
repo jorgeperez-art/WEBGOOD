@@ -13,17 +13,30 @@ export function Footer() {
             {site.legal.name} · CIF <Tbc value={site.legal.cif} />
           </p>
         </div>
-        <nav aria-label="Legal">
-          <ul className="flex flex-wrap gap-x-7 gap-y-2 text-xs uppercase tracking-[0.14em] text-acero">
-            {site.legalPages.map((page) => (
-              <li key={page.href}>
-                <Link href={page.href} className="hover:text-cobre">
-                  {page.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="space-y-4 md:text-right">
+          <nav aria-label="Contenido">
+            <ul className="flex flex-wrap gap-x-7 gap-y-2 text-xs uppercase tracking-[0.14em] md:justify-end">
+              {site.footerLinks.map((page) => (
+                <li key={page.href}>
+                  <Link href={page.href} className="hover:text-cobre">
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label="Legal">
+            <ul className="flex flex-wrap gap-x-7 gap-y-2 text-xs uppercase tracking-[0.14em] text-acero md:justify-end">
+              {site.legalPages.map((page) => (
+                <li key={page.href}>
+                  <Link href={page.href} className="hover:text-cobre">
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </footer>
   );
