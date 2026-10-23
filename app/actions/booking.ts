@@ -36,7 +36,12 @@ export async function createAppointmentAction(_prev: BookingState, formData: For
     return { status: "ok", startsAt: String(formData.get("startsAt") ?? ""), reason: "", name: "", emailed: true };
   }
 
-  if (await isRateLimited()) {
+  // Si el límite no se puede comprobar, la reserva sigue: es una protección, no un requisito.
+  const limited = await isRateLimited().catch((error) => {
+    console.error("[reservas] límite", error);
+    return false;
+  });
+  if (limited) {
     return {
       status: "error",
       errors: { form: "Has hecho demasiados intentos. Espera unos minutos o llámanos." },
