@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connection } from "next/server";
 import { canaryDate } from "@/lib/booking/time";
 import { getBookingProvider } from "@/lib/booking/provider";
+import { supabaseAdmin } from "@/lib/supabase/server";
 
 /**
  * Diagnóstico de la reserva: dice qué falta sin mostrar ninguna clave.
@@ -39,7 +40,27 @@ export async function GET() {
     const provider = await getBookingProvider();
     const date = canaryDate(new Date(), 1);
     const slots = await provider.getAvailableSlots(date);
-    return NextResponse.json({ ok: true, env, erp, prueba: { dia: date, horasLibres: slots.length } });
+    // La base propia de la web solo guarda el límite de intentos.
+    let web = "ok";
+    try {
+      const { error } = await supabaseAdmin().from("booking_attempts").select("id", { count: "exact", head: true });
+      if (error) web = `error: ${error.message}`;
+    } catch (error) {
+      web = `error: ${(error as Error).message}`;
+    }
+    // Comprueba que existen las columnas que la web rellena al reservar.
+    let columnasAgenda = "ok";
+    if (process.env.ERP_SUPABASE_URL) {
+      const { createClient } = await import("@supabase/supabase-js");
+      const { error } = await createClient(process.env.ERP_SUPABASE_URL.trim(), erpKey, {
+        auth: { persistSession: false },
+      })
+        .from("appointments")
+        .select("patient_id, type, status, notes, date, time_start, time_end")
+        .limit(1);
+      if (error) columnasAgenda = `error: ${error.message}`;
+    }
+    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, prueba: { dia: date, horasLibres: slots.length } });
   } catch (error) {
     const e = error as { name?: string; message?: string; code?: string; hint?: string };
     return NextResponse.json(
