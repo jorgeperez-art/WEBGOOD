@@ -69,16 +69,18 @@ async function dayAppointments(date: string, from?: string, to?: string) {
 }
 
 /** Ficha existente con ese email o teléfono, para enlazar la cita. */
-async function findPatient(email: string, phone: string) {
+async function findPatientStrict(email: string, phone: string): Promise<string | null> {
   const { data, error } = await erpDb()
     .from("patients")
     .select("id")
     .or(`email.eq.${email.toLowerCase()},phone.eq.${phone.replace(/[^\d+]/g, "")}`)
     .limit(1);
-  // Enlazar la ficha es un extra: si falla, la cita se crea igual sin paciente.
-  if (error) return null;
+  if (error) throw error;
   return data?.[0]?.id ?? null;
 }
+
+/** Enlazar la ficha es un extra: si falla, la cita se crea igual sin paciente. */
+const findPatient = (email: string, phone: string) => findPatientStrict(email, phone).catch(() => null);
 
 export const erpProvider: BookingProvider = {
   async getAvailableSlots(date) {
@@ -110,20 +112,20 @@ export const erpProvider: BookingProvider = {
       `Consentimiento: ${input.consentAt}`,
     ].filter(Boolean);
 
-    const { data, error } = await erpDb()
-      .from("appointments")
-      .insert({
-        patient_id: await findPatient(input.email, input.phone),
-        type: TYPES[input.reason] ?? "otro",
-        status: "programada",
-        notes: notes.join("\n"),
-        date: start.date,
-        time_start: start.time,
-        time_end: end.time,
-      })
-      .select("id")
-      .single();
-    if (error) throw error;
+    const row = {
+      patient_id: await findPatient(input.email, input.phone),
+      type: TYPES[input.reason] ?? "otro",
+      status: "programada",
+      notes: notes.join("\n"),
+      date: start.date,
+      time_start: start.time,
+      time_end: end.time,
+    };
+    const insert = (values: typeof row) => erpDb().from("appointments").insert(values).select("id").single();
+    let { data, error } = await insert(row);
+    // 23514: la agenda no acepta ese tipo de cita; se guarda como "otro" para no perder la reserva.
+    if (error?.code === "23514" && row.type !== "otro") ({ data, error } = await insert({ ...row, type: "otro" }));
+    if (error || !data) throw error ?? new Error("La agenda no devolvió la cita creada");
 
     // La app no impide solapes: si otra reserva entró a la vez, gana la primera.
     const clash = await clashes();
@@ -141,20 +143,32 @@ export const erpProvider: BookingProvider = {
  * falla el guardado sin tener que reservar.
  */
 export async function erpInsertCheck() {
-  const { data, error } = await erpDb()
-    .from("appointments")
-    .insert({
-      patient_id: null,
-      type: "otro",
-      status: "cancelada",
-      notes: "Prueba de diagnóstico de la web (se borra sola)",
-      date: "2000-01-01",
-      time_start: "09:00:00",
-      time_end: "09:30:00",
-    })
-    .select("id")
-    .single();
-  if (error) return { ok: false, codigo: error.code, mensaje: error.message, detalle: error.details, pista: error.hint };
-  const removed = await erpDb().from("appointments").delete().eq("id", data.id);
-  return { ok: true, borrada: !removed.error };
+  const results: Record<string, unknown> = {};
+  for (const type of ["otro", ...new Set(Object.values(TYPES))]) {
+    const { data, error } = await erpDb()
+      .from("appointments")
+      .insert({
+        patient_id: null,
+        type,
+        status: "programada",
+        notes: "Prueba de diagnóstico de la web (se borra sola)",
+        date: "2000-01-01",
+        time_start: "09:00:00",
+        time_end: "09:30:00",
+      })
+      .select("id")
+      .single();
+    if (error) {
+      results[type] = { ok: false, codigo: error.code, mensaje: error.message, detalle: error.details };
+      continue;
+    }
+    const removed = await erpDb().from("appointments").delete().eq("id", data.id);
+    results[type] = { ok: true, borrada: !removed.error };
+  }
+  try {
+    results.buscarPaciente = { ok: true, encontrado: Boolean(await findPatientStrict("prueba@example.com", "600000000")) };
+  } catch (error) {
+    results.buscarPaciente = { ok: false, mensaje: (error as Error).message };
+  }
+  return results;
 }
