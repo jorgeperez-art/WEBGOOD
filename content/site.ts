@@ -21,6 +21,18 @@ export const site = {
     descriptor: "Centro óptico",
     claim: "Enfocar lo importante",
   },
+  /** Textos de "Quiénes somos", sacados del manual de marca. */
+  about: {
+    short:
+      "goodview, centro óptico en Puerto de la Cruz, Tenerife. Rigor profesional y trato cercano para cuidar tu vista. Reserva tu cita online.",
+    long: [
+      "goodview es un centro óptico en Puerto de la Cruz que une rigor profesional y trato cercano.",
+      "En un mundo de pantallas, prisas y estímulos, la vista es uno de nuestros sentidos más exigidos, y cuidarla es también una forma de bienestar.",
+      "Por eso ponemos el foco en cada persona. Una óptica actual y técnicamente sólida, con una forma de trabajar cálida, cercana y honesta.",
+    ],
+    principles: ["Escuchamos antes de recomendar", "Analizamos antes de prescribir", "Acompañamos antes de vender"],
+    team: tbc("Equipo y titulaciones"),
+  },
   legal: {
     name: "Holding Of Business Goodviews S.L.",
     cif: tbc("CIF"),
@@ -51,10 +63,13 @@ export const site = {
   /** Texto visible del horario. */
   hoursLabel: "Lunes a viernes, 9:30 a 20:30 · Sábados, 10:00 a 14:00",
   bookingLabel: tbc("Condiciones de cita"),
-  /** Servicios confirmados, agrupados para la web. */
+  /** Servicios confirmados, agrupados para la web. Cada grupo tiene su página en /servicios/[slug]. */
   services: [
     {
+      slug: "examenes-salud-visual",
       title: "Exámenes y salud visual",
+      intro:
+        "Una revisión completa para saber cómo ves y cómo están tus ojos. Medimos tu graduación, comprobamos cómo trabajan los dos ojos juntos y te explicamos los resultados con calma.",
       items: [
         "Graduación de la vista",
         "Revisión optométrica",
@@ -65,7 +80,10 @@ export const site = {
       ],
     },
     {
+      slug: "gafas-y-lentes",
       title: "Gafas y lentes",
+      intro:
+        "Gafas pensadas para tu vista y para tu día a día: graduadas, progresivas, para pantallas o de sol. Te ayudamos a elegir montura y lentes según tu graduación, lo que haces cada día y tu estilo.",
       items: [
         "Gafas graduadas personalizadas",
         "Gafas progresivas de última generación",
@@ -77,7 +95,10 @@ export const site = {
       ],
     },
     {
+      slug: "lentes-de-contacto",
       title: "Lentes de contacto",
+      intro:
+        "Adaptamos las lentes de contacto a tus ojos y a tu rutina, también multifocales, tóricas o para control de miopía. Antes estudiamos cómo las toleras.",
       items: [
         "Adaptación de lentes de contacto",
         "Lentillas multifocales",
@@ -87,7 +108,10 @@ export const site = {
       ],
     },
     {
+      slug: "terapia-visual-infancia",
       title: "Terapia visual e infancia",
+      intro:
+        "La vista influye en cómo aprenden y juegan los niños. Revisamos su visión, seguimos su evolución, trabajamos el control de la miopía y preparamos terapia visual personalizada cuando hace falta.",
       items: [
         "Terapia visual personalizada",
         "Examen visual infantil",
@@ -97,7 +121,10 @@ export const site = {
       ],
     },
     {
+      slug: "taller",
       title: "Taller",
+      intro:
+        "Montamos tus lentes, reparamos y ajustamos tus gafas y cambiamos los cristales graduados para que sigan como el primer día.",
       items: [
         "Montaje de lentes oftálmicas",
         "Reparación de gafas",
@@ -164,3 +191,6 @@ export const site = {
 };
 
 export type Site = typeof site;
+export type ServiceGroup = Site["services"][number];
+
+export const serviceBySlug = (slug: string) => site.services.find((g) => g.slug === slug);
