@@ -12,7 +12,9 @@ export async function GET() {
   const env = {
     BOOKING_PROVIDER: process.env.BOOKING_PROVIDER ?? null,
     SUPABASE_URL: Boolean(process.env.SUPABASE_URL),
+    NEXT_PUBLIC_SUPABASE_URL: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
     SUPABASE_SERVICE_ROLE_KEY: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+    SUPABASE_SECRET_KEY: Boolean(process.env.SUPABASE_SECRET_KEY),
     RATE_LIMIT_SALT: Boolean(process.env.RATE_LIMIT_SALT),
   };
   try {
