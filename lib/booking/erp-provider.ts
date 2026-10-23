@@ -2,19 +2,22 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { site } from "@/content/site";
 import { freeSlots } from "./slots";
-import { canaryDate, canaryToUtc } from "./time";
+import { canaryToUtc, wallTime } from "./time";
 import { SlotTakenError, type BookingProvider } from "./provider";
 import type { OpeningHoursRow } from "./types";
 
 /**
  * Reservas dentro de la agenda de goodview-erp: la web lee las citas de su
- * tabla `appointments` y crea ahí las nuevas como "pendiente", así salen
+ * tabla `appointments` y crea ahí las nuevas como "programada", así salen
  * directamente en la Agenda de la app. Para bloquear un hueco basta con
  * crear una cita en la app.
  */
 
-/** Columnas de `appointments` en goodview-erp que usa la web. */
-type ErpAppointment = { id: string; start_time: string; end_time: string; created_at: string };
+/**
+ * Columnas de `appointments` en goodview-erp que usa la web. La fecha y las
+ * horas son locales de Canarias.
+ */
+type ErpAppointment = { id: string; date: string; time_start: string; time_end: string; created_at: string };
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
@@ -35,6 +38,13 @@ const TYPES: Record<string, string> = {
   "Lentes de contacto": "adaptacion_lentillas",
 };
 
+/** Día y hora locales ("YYYY-MM-DD", "HH:MM:SS") de un instante ISO. */
+function local(iso: string) {
+  const w = wallTime(new Date(iso));
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return { date: `${w.year}-${pad(w.month)}-${pad(w.day)}`, time: `${pad(w.hour)}:${pad(w.minute)}:00` };
+}
+
 function erpDb() {
   const url = process.env.ERP_SUPABASE_URL;
   const key = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY;
@@ -42,13 +52,15 @@ function erpDb() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
-async function overlapping(startsAt: string, endsAt: string) {
-  const { data, error } = await erpDb()
+/** Citas no canceladas de un día; con `from`/`to` ("HH:MM:SS"), solo las que se solapan. */
+async function dayAppointments(date: string, from?: string, to?: string) {
+  let query = erpDb()
     .from("appointments")
-    .select("id, start_time, end_time, created_at")
-    .neq("status", "cancelada")
-    .lt("start_time", endsAt)
-    .gt("end_time", startsAt)
+    .select("id, date, time_start, time_end, created_at")
+    .eq("date", date)
+    .neq("status", "cancelada");
+  if (from && to) query = query.lt("time_start", to).gt("time_end", from);
+  const { data, error } = await query
     .order("created_at", { ascending: true })
     .order("id", { ascending: true });
   if (error) throw error;
@@ -62,29 +74,34 @@ async function findPatient(email: string, phone: string) {
     .select("id")
     .or(`email.eq.${email.toLowerCase()},phone.eq.${phone.replace(/[^\d+]/g, "")}`)
     .limit(1);
-  if (error) throw error;
+  // Enlazar la ficha es un extra: si falla, la cita se crea igual sin paciente.
+  if (error) return null;
   return data?.[0]?.id ?? null;
 }
 
 export const erpProvider: BookingProvider = {
   async getAvailableSlots(date) {
-    const dayStart = canaryToUtc(date, "00:00").toISOString();
-    const dayEnd = canaryToUtc(canaryDate(new Date(`${date}T12:00:00Z`), 1), "00:00").toISOString();
-    const busy = await overlapping(dayStart, dayEnd);
+    const busy = await dayAppointments(date);
     return freeSlots({
       date,
       hours,
-      busy: busy.map((b) => ({ startsAt: b.start_time, endsAt: b.end_time })),
+      busy: busy.map((b) => ({
+        startsAt: canaryToUtc(b.date, b.time_start.slice(0, 5)).toISOString(),
+        endsAt: canaryToUtc(b.date, b.time_end.slice(0, 5)).toISOString(),
+      })),
       now: new Date(),
       minNoticeMinutes: site.booking.minNoticeMinutes,
     });
   },
 
   async createAppointment(input) {
-    if ((await overlapping(input.startsAt, input.endsAt)).length) throw new SlotTakenError();
+    const start = local(input.startsAt);
+    const end = local(input.endsAt);
+    const clashes = () => dayAppointments(start.date, start.time, end.time);
+    if ((await clashes()).length) throw new SlotTakenError();
 
     const notes = [
-      "Reserva desde la web",
+      `Reserva desde la web: ${input.name}`,
       `Teléfono: ${input.phone}`,
       `Email: ${input.email}`,
       `Motivo: ${input.reason}`,
@@ -96,18 +113,19 @@ export const erpProvider: BookingProvider = {
       .from("appointments")
       .insert({
         patient_id: await findPatient(input.email, input.phone),
-        type: TYPES[input.reason] ?? "consulta",
-        title: `Web · ${input.name}`,
+        type: TYPES[input.reason] ?? "otro",
+        status: "programada",
         notes: notes.join("\n"),
-        start_time: input.startsAt,
-        end_time: input.endsAt,
+        date: start.date,
+        time_start: start.time,
+        time_end: end.time,
       })
       .select("id")
       .single();
     if (error) throw error;
 
     // La app no impide solapes: si otra reserva entró a la vez, gana la primera.
-    const clash = await overlapping(input.startsAt, input.endsAt);
+    const clash = await clashes();
     if (clash[0] && clash[0].id !== data.id) {
       await erpDb().from("appointments").delete().eq("id", data.id);
       throw new SlotTakenError();
