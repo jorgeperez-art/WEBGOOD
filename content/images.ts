@@ -3,6 +3,7 @@
  * cuando haya fotos reales de la tienda se sustituyen aquí (mismo nombre o nueva importación).
  */
 import lente from "@/public/images/lente.webp";
+import lenteLogo from "@/public/images/lente-logo.webp";
 import mesas from "@/public/images/tienda-mesas.webp";
 import butacas from "@/public/images/tienda-butacas.webp";
 import expositor from "@/public/images/tienda-expositor.webp";
@@ -15,6 +16,8 @@ import baldas from "@/public/images/tienda-baldas.webp";
 export const images = {
   hero: { src: mesas, alt: "Mesas de atención con sillas tapizadas bajo un techo terracota" },
   lens: { src: lente, alt: "" },
+  /** Foto de marca con el logotipo: debe verse entero, así que se encuadra centrada. */
+  lensLogo: { src: lenteLogo, alt: "goodview, Centro óptico" },
   services: { src: butacas, alt: "Zona de espera con butacas junto al escaparate" },
   booking: { src: mostrador, alt: "Mostrador curvo de madera clara y mesa de atención" },
   visit: { src: expositor, alt: "Pared de baldas con monturas y suelo de madera clara" },
