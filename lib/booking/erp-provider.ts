@@ -8,7 +8,7 @@ import type { OpeningHoursRow } from "./types";
 
 /**
  * Reservas dentro de la agenda de goodview-erp: la web lee las citas de su
- * tabla `appointments` y crea ahí las nuevas como "programada", así salen
+ * tabla `appointments` y crea ahí las nuevas con el estado por defecto, así salen
  * directamente en la Agenda de la app. Para bloquear un hueco basta con
  * crear una cita en la app.
  */
@@ -115,7 +115,7 @@ export const erpProvider: BookingProvider = {
     const row = {
       patient_id: await findPatient(input.email, input.phone),
       type: TYPES[input.reason] ?? "otro",
-      status: "programada",
+      // Sin estado: la agenda pone el suyo por defecto (sus estados no coinciden con la documentación).
       notes: notes.join("\n"),
       date: start.date,
       time_start: start.time,
@@ -150,7 +150,6 @@ export async function erpInsertCheck() {
       .insert({
         patient_id: null,
         type,
-        status: "programada",
         notes: "Prueba de diagnóstico de la web (se borra sola)",
         date: "2000-01-01",
         time_start: "09:00:00",
