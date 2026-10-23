@@ -2,7 +2,6 @@
  * Imágenes de la web. Ahora son renders del proyecto de interiorismo;
  * cuando haya fotos reales de la tienda se sustituyen aquí (mismo nombre o nueva importación).
  */
-import lente from "@/public/images/lente.webp";
 import lenteLogo from "@/public/images/lente-logo.webp";
 import mesas from "@/public/images/tienda-mesas.webp";
 import butacas from "@/public/images/tienda-butacas.webp";
@@ -15,7 +14,6 @@ import baldas from "@/public/images/tienda-baldas.webp";
 
 export const images = {
   hero: { src: mesas, alt: "Mesas de atención con sillas tapizadas bajo un techo terracota" },
-  lens: { src: lente, alt: "" },
   /** Foto de marca con el logotipo: debe verse entero, así que se encuadra centrada. */
   lensLogo: { src: lenteLogo, alt: "goodview, Centro óptico" },
   services: { src: butacas, alt: "Zona de espera con butacas junto al escaparate" },
@@ -40,7 +38,7 @@ export const images = {
   } as Record<string, { src: typeof mesas; alt: string }>,
   /** Fotos de los consejos (clave: image de content/articles.ts). */
   articles: {
-    fatiga: { src: lente, alt: "" },
+    fatiga: { src: lenteLogo, alt: "goodview, Centro óptico" },
     miopia: { src: butacas, alt: "" },
     progresivas: { src: mesas, alt: "" },
   } as Record<string, { src: typeof mesas; alt: string }>,
