@@ -2,7 +2,9 @@ import { supabaseEnv } from "@/lib/supabase/env";
 import type { AppointmentInput, Slot } from "./types";
 
 /**
- * La web solo habla con esta interfaz. Cambiar de Supabase a Cal.com es
+ * La web solo habla con esta interfaz. "erp" guarda las citas en la agenda de
+ * goodview-erp; "supabase" en la base de datos propia de la web.
+ * Cambiar de Supabase a Cal.com es
  * cambiar BOOKING_PROVIDER, sin tocar el asistente ni los Server Actions.
  */
 export interface BookingProvider {
@@ -21,10 +23,14 @@ export class BookingNotConfiguredError extends Error {}
 
 
 export async function getBookingProvider(): Promise<BookingProvider> {
-  const choice = process.env.BOOKING_PROVIDER ?? (supabaseEnv().url ? "supabase" : "demo");
+  const choice =
+    process.env.BOOKING_PROVIDER ??
+    (process.env.ERP_SUPABASE_URL ? "erp" : supabaseEnv().url ? "supabase" : "demo");
   switch (choice) {
     case "supabase":
       return (await import("./supabase-provider")).supabaseProvider;
+    case "erp":
+      return (await import("./erp-provider")).erpProvider;
     case "calcom":
       return (await import("./calcom-provider")).calcomProvider;
     case "demo":
