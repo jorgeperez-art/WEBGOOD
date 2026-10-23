@@ -37,7 +37,7 @@ export const site = {
       country: "ES",
     },
     geo: null as null | { lat: number; lng: number },
-    phone: tbc("Teléfono"),
+    phone: "922 31 41 85",
     whatsapp: tbc("WhatsApp"),
     email: "hola@goodview.es",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=Calle+Blanco+1,+38400+Puerto+de+la+Cruz" as string | null,
@@ -51,12 +51,79 @@ export const site = {
   /** Texto visible del horario. */
   hoursLabel: "Lunes a viernes, 9:30 a 20:30 · Sábados, 10:00 a 14:00",
   bookingLabel: tbc("Condiciones de cita"),
+  /** Servicios confirmados, agrupados para la web. */
   services: [
-    { title: tbc("Servicio"), description: tbc("Descripción") },
-    { title: tbc("Servicio"), description: tbc("Descripción") },
-    { title: tbc("Servicio"), description: tbc("Descripción") },
+    {
+      title: "Exámenes y salud visual",
+      items: [
+        "Graduación de la vista",
+        "Revisión optométrica",
+        "Examen visual",
+        "Evaluación de la visión binocular",
+        "Evaluación de la fatiga visual digital",
+        "Asesoramiento en salud visual",
+      ],
+    },
+    {
+      title: "Gafas y lentes",
+      items: [
+        "Gafas graduadas personalizadas",
+        "Gafas progresivas de última generación",
+        "Lentes ocupacionales",
+        "Lentes para pantallas y trabajo digital",
+        "Gafas de sol graduadas",
+        "Asesoramiento personalizado en monturas y lentes premium",
+        "Asesoramiento estético",
+      ],
+    },
+    {
+      title: "Lentes de contacto",
+      items: [
+        "Adaptación de lentes de contacto",
+        "Lentillas multifocales",
+        "Lentillas tóricas",
+        "Lentillas para control de miopía",
+        "Estudio de tolerancia a lentes de contacto",
+      ],
+    },
+    {
+      title: "Terapia visual e infancia",
+      items: [
+        "Terapia visual personalizada",
+        "Examen visual infantil",
+        "Control de miopía infantil",
+        "Evaluación de dificultades visuales en el aprendizaje",
+        "Seguimiento de la evolución visual infantil",
+      ],
+    },
+    {
+      title: "Taller",
+      items: [
+        "Montaje de lentes oftálmicas",
+        "Reparación de gafas",
+        "Ajuste y mantenimiento de monturas",
+        "Personalización de gafas",
+        "Sustitución de lentes graduadas",
+      ],
+    },
   ],
-  bookingReasons: [tbc("Motivo de cita")],
+  /** Motivos de cita: los grupos de servicios más una opción abierta. */
+  bookingReasons: [
+    "Examen visual y salud visual",
+    "Gafas y lentes",
+    "Lentes de contacto",
+    "Terapia visual e infancia",
+    "Taller: reparación y ajustes",
+    "Otro motivo",
+  ],
+  booking: {
+    /** Confirmado por Jorge: se puede reservar hasta 15 días por adelantado. */
+    daysAhead: 15,
+    /** Provisional, por confirmar: antelación mínima para reservar. */
+    minNoticeMinutes: 120,
+    /** Confirmado por Jorge: citas de 30 minutos (modo demo; en Supabase va en opening_hours). */
+    slotMinutes: 30,
+  },
   brands: [
     "Porsche Design",
     "Lindberg",

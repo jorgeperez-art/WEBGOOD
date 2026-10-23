@@ -23,8 +23,31 @@ la web lo muestra como `[… por confirmar]`. No se inventa ningún dato.
 - Logos en `components/ui/brand-paths.ts`, vectorizados desde los PNG oficiales. Si llegan los
   SVG originales, se sustituyen ahí.
 
+## Reservas
+
+El asistente de cita (`components/booking/Wizard.tsx`) llama a dos Server Actions
+(`app/actions/booking.ts`): una calcula las horas libres y otra guarda la cita. Ambas hablan
+solo con la interfaz `BookingProvider` (`lib/booking/provider.ts`):
+
+- `supabase`: producción. Horario en `opening_hours`, bloqueos en `blocked_slots`, citas en `appointments`.
+- `demo`: sin base de datos, para probar en local (horario de `site.ts`, citas en memoria).
+- `calcom`: adaptador preparado para pasar a Cal.com en el futuro.
+
+Protección: validación con Zod en el servidor, honeypot, límite de 5 intentos por IP cada
+10 minutos y restricción en la base de datos que impide dos citas solapadas.
+Emails con Resend: confirmación al cliente y aviso a la óptica (`lib/email/send.ts`).
+
+### Supabase
+
+1. Crea un proyecto en [supabase.com](https://supabase.com) (región UE).
+2. En **SQL Editor**, ejecuta `supabase/migrations/0001_reservas.sql` y después `supabase/seed.sql`.
+3. Copia `SUPABASE_URL` y la `service_role key` (Project Settings → API) a las variables de entorno.
+
+### Variables de entorno
+
+Copia `.env.example` a `.env.local` y rellénalo. Sin variables de Supabase, en local se usa el modo `demo`.
+
 ## Estado
 
-Fase 1 (base): cabecera, barra móvil, pie, páginas legales y anclajes de la home.
-Siguientes fases: portada y marcas, servicios y visítanos, reserva con Supabase, panel `/admin`,
-SEO y legal, y guía de despliegue en Vercel y GoDaddy.
+Hecho: base, home visual, servicios y reservas.
+Pendiente: panel `/admin`, textos legales y cookies, SEO y `/llms.txt`, y despliegue en Vercel con goodview.es.
