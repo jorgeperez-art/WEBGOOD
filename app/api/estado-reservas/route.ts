@@ -28,7 +28,8 @@ export async function GET() {
     const e = error as { name?: string; message?: string; code?: string; hint?: string };
     return NextResponse.json(
       { ok: false, env, error: { tipo: e.name, codigo: e.code ?? null, mensaje: e.message, pista: e.hint ?? null } },
-      { status: 500 },
+      // 200 para que el diagnóstico se pueda leer desde cualquier herramienta; el fallo va en `ok`.
+      { headers: { "cache-control": "no-store" } },
     );
   }
 }
