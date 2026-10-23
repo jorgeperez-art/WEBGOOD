@@ -35,7 +35,7 @@ export const site = {
   },
   legal: {
     name: "Holding Of Business Goodviews S.L.",
-    cif: tbc("CIF"),
+    cif: "B93927137",
     registeredAddress: tbc("Domicilio social"),
   },
   url: "https://goodview.es",
