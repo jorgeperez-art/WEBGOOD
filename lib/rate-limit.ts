@@ -9,16 +9,18 @@ const MAX_ATTEMPTS = 5;
 // Sin Supabase (desarrollo) el límite se guarda en memoria.
 const memory = new Map<string, number[]>();
 
-async function clientIpHash() {
+async function clientIpHash(bucket: string) {
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "desconocida";
   const salt = process.env.RATE_LIMIT_SALT ?? "goodview";
-  return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
+  // La reserva conserva el formato original; otros usos (el acceso al panel) llevan su prefijo.
+  const key = bucket === "reserva" ? `${salt}:${ip}` : `${salt}:${bucket}:${ip}`;
+  return createHash("sha256").update(key).digest("hex");
 }
 
-/** Registra un intento de reserva y dice si la IP ha superado el límite. */
-export async function isRateLimited(): Promise<boolean> {
-  const ipHash = await clientIpHash();
+/** Registra un intento (de reserva o de acceso al panel) y dice si la IP ha superado el límite. */
+export async function isRateLimited(bucket: "reserva" | "acceso" = "reserva"): Promise<boolean> {
+  const ipHash = await clientIpHash(bucket);
   const since = Date.now() - WINDOW_MINUTES * 60_000;
 
   if (!supabaseEnv().url) {

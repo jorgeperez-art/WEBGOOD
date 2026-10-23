@@ -50,4 +50,10 @@ Copia `.env.example` a `.env.local` y rellénalo. Sin variables de Supabase, en 
 ## Estado
 
 Hecho: base, home visual, servicios y reservas.
-Pendiente: panel `/admin`, textos legales y cookies, SEO y `/llms.txt`, y despliegue en Vercel con goodview.es.
+## Panel de citas (/admin)
+
+- Se entra en `/admin` con un usuario de Supabase Auth que esté en la tabla `staff` (ver `supabase/snippets/dar-acceso-panel.sql`).
+- La sesión es una cookie firmada con `ADMIN_SESSION_SECRET` (o `RATE_LIMIT_SALT` si no existe), válida 12 horas.
+- Muestra las citas de los próximos 14 días, permite confirmarlas, cancelarlas y recuperarlas, y bloquear huecos.
+
+Pendiente: emails con Resend, textos legales y fotos reales.
