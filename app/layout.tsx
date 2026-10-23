@@ -14,7 +14,7 @@ const fustat = Fustat({
 });
 
 const title = `${site.brand.name} · ${site.brand.descriptor} en Tenerife`;
-const description = `${site.brand.descriptor} en Tenerife. ${site.brand.claim}. Reserva tu cita.`;
+const description = site.about.short;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

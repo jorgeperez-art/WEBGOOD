@@ -26,6 +26,15 @@ export const images = {
     { src: baldas, alt: "Pared de expositores con baldas de madera y celosía" },
     { src: butacas, alt: "Rincón de espera con butacas y mesa auxiliar" },
   ],
+  about: { src: celosia, alt: "Celosía de roble junto a la zona de atención" },
+  /** Una foto por grupo de servicios (clave: slug de site.services). */
+  serviceGroups: {
+    "examenes-salud-visual": { src: mesas, alt: "Mesas de atención bajo un techo terracota" },
+    "gafas-y-lentes": { src: baldas, alt: "Pared de expositores con monturas" },
+    "lentes-de-contacto": { src: mostrador, alt: "Mostrador curvo de madera clara" },
+    "terapia-visual-infancia": { src: butacas, alt: "Rincón de espera con butacas" },
+    taller: { src: celosia, alt: "Celosía de roble y expositores de monturas" },
+  } as Record<string, { src: typeof mesas; alt: string }>,
   /** Mientras sean renders, se indica en la galería. */
   areRenders: true,
 };
