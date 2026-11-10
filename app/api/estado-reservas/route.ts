@@ -70,7 +70,11 @@ export async function GET(request: Request) {
       new URL(request.url).searchParams.has("reservas") && process.env.ERP_SUPABASE_URL
         ? await (await import("@/lib/booking/erp-provider")).erpWebBookings()
         : undefined;
-    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, guardar, reservasWeb, prueba: { dia: date, horasLibres: slots.length } });
+    // ?tablas=1 lista las tablas y columnas de la agenda (sin datos).
+    const tablas = new URL(request.url).searchParams.has("tablas")
+      ? await (await import("@/lib/booking/erp-provider")).erpTables()
+      : undefined;
+    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, guardar, reservasWeb, tablas, prueba: { dia: date, horasLibres: slots.length } });
   } catch (error) {
     const e = error as { name?: string; message?: string; code?: string; hint?: string };
     return NextResponse.json(

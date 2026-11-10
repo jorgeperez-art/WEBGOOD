@@ -193,3 +193,19 @@ export async function erpWebBookings() {
     })),
   };
 }
+
+/**
+ * Diagnóstico: tablas y columnas de la base de la app (sin datos), para
+ * encontrar dónde guarda cosas como los días bloqueados.
+ */
+export async function erpTables() {
+  const url = process.env.ERP_SUPABASE_URL?.trim();
+  const key = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!url || !key) return null;
+  const res = await fetch(`${url}/rest/v1/`, { headers: { apikey: key, authorization: `Bearer ${key}` } });
+  if (!res.ok) return { ok: false, estado: res.status };
+  const spec = (await res.json()) as { definitions?: Record<string, { properties?: Record<string, unknown> }> };
+  return Object.fromEntries(
+    Object.entries(spec.definitions ?? {}).map(([table, def]) => [table, Object.keys(def.properties ?? {})]),
+  );
+}
