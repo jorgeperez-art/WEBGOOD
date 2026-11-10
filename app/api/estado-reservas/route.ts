@@ -65,7 +65,12 @@ export async function GET(request: Request) {
       new URL(request.url).searchParams.has("guardar") && process.env.ERP_SUPABASE_URL
         ? await (await import("@/lib/booking/erp-provider")).erpInsertCheck()
         : undefined;
-    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, guardar, prueba: { dia: date, horasLibres: slots.length } });
+    // ?reservas=1 lista las últimas reservas web guardadas en la agenda (solo fecha, hora y estado).
+    const reservasWeb =
+      new URL(request.url).searchParams.has("reservas") && process.env.ERP_SUPABASE_URL
+        ? await (await import("@/lib/booking/erp-provider")).erpWebBookings()
+        : undefined;
+    return NextResponse.json({ ok: true, env, erp, web, columnasAgenda, guardar, reservasWeb, prueba: { dia: date, horasLibres: slots.length } });
   } catch (error) {
     const e = error as { name?: string; message?: string; code?: string; hint?: string };
     return NextResponse.json(
