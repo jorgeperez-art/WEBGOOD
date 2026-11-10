@@ -19,6 +19,9 @@ export async function GET(request: Request) {
     ERP_SUPABASE_URL: Boolean(process.env.ERP_SUPABASE_URL),
     ERP_SUPABASE_SERVICE_ROLE_KEY: Boolean(process.env.ERP_SUPABASE_SERVICE_ROLE_KEY),
     RATE_LIMIT_SALT: Boolean(process.env.RATE_LIMIT_SALT),
+    RESEND_API_KEY: Boolean(process.env.RESEND_API_KEY?.trim()),
+    EMAIL_FROM: process.env.EMAIL_FROM?.trim() || null,
+    EMAIL_NOTIFY_TO_cuantos: (process.env.EMAIL_NOTIFY_TO ?? "").split(/[,;\s]+/).filter((a) => a.includes("@")).length,
   };
   // Datos no secretos para comprobar que la URL y la clave del ERP son del mismo proyecto.
   const erpKey = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY?.trim() ?? "";

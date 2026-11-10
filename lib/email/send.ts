@@ -22,9 +22,20 @@ const escape = (s: string) =>
  * las direcciones siguen por confirmar, no envía nada y lo deja en el log.
  */
 export async function sendBookingEmails(appt: AppointmentInput): Promise<boolean> {
-  const key = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM ?? site.email.from;
-  const notifyTo = process.env.EMAIL_NOTIFY_TO ?? site.email.notifyTo;
+  // La cita ya está guardada: un fallo del email nunca debe romper la reserva.
+  return sendEmails(appt).catch((error) => {
+    console.error("[email]", error);
+    return false;
+  });
+}
+
+async function sendEmails(appt: AppointmentInput): Promise<boolean> {
+  const key = process.env.RESEND_API_KEY?.trim();
+  const from = process.env.EMAIL_FROM?.trim() || site.email.from;
+  // Uno o varios emails de la óptica, separados por comas.
+  const notifyTo = (process.env.EMAIL_NOTIFY_TO ?? site.email.notifyTo)
+    .split(/[,;\s]+/)
+    .filter((a) => a.includes("@") && !isTbc(a));
   if (!key || isTbc(from)) {
     console.warn("[email] Resend sin configurar: no se envían emails de la cita");
     return false;
@@ -53,7 +64,7 @@ export async function sendBookingEmails(appt: AppointmentInput): Promise<boolean
     }),
   ];
 
-  if (!isTbc(notifyTo)) {
+  if (notifyTo.length) {
     tasks.push(
       resend.emails.send({
         from,
