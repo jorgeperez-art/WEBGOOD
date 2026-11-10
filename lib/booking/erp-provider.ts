@@ -171,3 +171,41 @@ export async function erpInsertCheck() {
   }
   return results;
 }
+
+/**
+ * Diagnóstico: cuántas reservas de la web hay en la agenda y de qué días,
+ * sin datos personales.
+ */
+export async function erpWebBookings() {
+  const { data, error } = await erpDb()
+    .from("appointments")
+    .select("date, time_start, status, created_at")
+    .ilike("notes", "Reserva desde la web%")
+    .order("created_at", { ascending: false })
+    .limit(20);
+  if (error) return { ok: false, mensaje: error.message };
+  return {
+    ok: true,
+    ultimas: (data ?? []).map((a) => ({
+      cita: `${a.date} ${String(a.time_start).slice(0, 5)}`,
+      estado: a.status,
+      creada: a.created_at,
+    })),
+  };
+}
+
+/**
+ * Diagnóstico: tablas y columnas de la base de la app (sin datos), para
+ * encontrar dónde guarda cosas como los días bloqueados.
+ */
+export async function erpTables() {
+  const url = process.env.ERP_SUPABASE_URL?.trim();
+  const key = process.env.ERP_SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!url || !key) return null;
+  const res = await fetch(`${url}/rest/v1/`, { headers: { apikey: key, authorization: `Bearer ${key}` } });
+  if (!res.ok) return { ok: false, estado: res.status };
+  const spec = (await res.json()) as { definitions?: Record<string, { properties?: Record<string, unknown> }> };
+  return Object.fromEntries(
+    Object.entries(spec.definitions ?? {}).map(([table, def]) => [table, Object.keys(def.properties ?? {})]),
+  );
+}
