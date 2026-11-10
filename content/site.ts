@@ -174,8 +174,10 @@ export const site = {
     "Ana Locking",
   ],
   email: {
-    from: tbc("Remitente de emails"),
-    notifyTo: tbc("Email de avisos de cita"),
+    /** Confirmado por Jorge (2026-11-10): los emails salen desde hola@. */
+    from: "Goodview <hola@goodview.es>",
+    /** Confirmado por Jorge (2026-11-10): el aviso de cada cita llega a hola@. Varios: separados por comas. */
+    notifyTo: "hola@goodview.es",
   },
   nav: [
     { id: "marcas", label: "Marcas" },
