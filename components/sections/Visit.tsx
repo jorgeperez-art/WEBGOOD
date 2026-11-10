@@ -3,6 +3,7 @@ import { site } from "@/content/site";
 import { images } from "@/content/images";
 import { Button } from "@/components/ui/Button";
 import { Tbc } from "@/components/ui/Tbc";
+import { whatsappUrl } from "@/components/ui/WhatsApp";
 
 export function Visit() {
   const { address, phone, whatsapp, email, mapsUrl } = site.contact;
@@ -51,7 +52,13 @@ export function Visit() {
             <div key={label} className="grid gap-1 border-b border-linea py-5 sm:grid-cols-[9rem_1fr]">
               <dt className="text-xs font-medium uppercase tracking-[0.16em]">{label}</dt>
               <dd className="text-sm">
-                <Tbc value={value} />
+                {label === "WhatsApp" && whatsappUrl() ? (
+                  <a href={whatsappUrl()!} target="_blank" rel="noopener" className="underline underline-offset-4">
+                    {value}
+                  </a>
+                ) : (
+                  <Tbc value={value} />
+                )}
               </dd>
             </div>
           ))}

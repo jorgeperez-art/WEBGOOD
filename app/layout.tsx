@@ -3,6 +3,7 @@ import { Fustat } from "next/font/google";
 import { site } from "@/content/site";
 import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { WhatsAppButton } from "@/components/ui/WhatsApp";
 import { Footer } from "@/components/layout/Footer";
 import { OpticianJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <MobileNav />
+        <WhatsAppButton />
       </body>
     </html>
   );
