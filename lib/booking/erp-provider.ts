@@ -68,6 +68,13 @@ async function dayAppointments(date: string, from?: string, to?: string) {
   return (data ?? []) as ErpAppointment[];
 }
 
+/** Día cerrado desde la app (Configuración → días bloqueados, tabla `blocked_days`). */
+async function isBlockedDay(date: string) {
+  const { data, error } = await erpDb().from("blocked_days").select("date").eq("date", date).limit(1);
+  if (error) throw error;
+  return (data ?? []).length > 0;
+}
+
 /** Ficha existente con ese email o teléfono, para enlazar la cita. */
 async function findPatientStrict(email: string, phone: string): Promise<string | null> {
   const { data, error } = await erpDb()
@@ -84,6 +91,7 @@ const findPatient = (email: string, phone: string) => findPatientStrict(email, p
 
 export const erpProvider: BookingProvider = {
   async getAvailableSlots(date) {
+    if (await isBlockedDay(date)) return [];
     const busy = await dayAppointments(date);
     return freeSlots({
       date,
